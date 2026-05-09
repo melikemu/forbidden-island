@@ -306,6 +306,29 @@
     .hero { padding: 56px 0 48px; }
     .flow-node { font-size: 11px; padding: 8px 12px; }
     .meta { gap: 20px; }
+
+    .decisions,
+    .decisions thead,
+    .decisions tbody,
+    .decisions tr,
+    .decisions th,
+    .decisions td { display: block; width: 100%; }
+    .decisions thead { display: none; }
+    .decisions tr {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      margin-bottom: 1px;
+      padding: 14px 16px;
+    }
+    .decisions td {
+      padding: 0;
+      border-bottom: none;
+      background: transparent;
+      width: 100%;
+    }
+    .decisions td:first-child {
+      margin-bottom: 6px;
+    }
   }
 </style>
 </head>
@@ -330,6 +353,10 @@
     <div class="meta-item">
       <span class="meta-key">Integration</span>
       <span class="meta-val">Philips Hue + Web Audio API</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-key">Ecosystem</span>
+      <span class="meta-val">Philips Hue · Third-Party</span>
     </div>
   </div>
 </div>
@@ -494,6 +521,7 @@
     <li>Integrated the system with Philips Hue via REST API with CIE xy color mapping</li>
     <li>Designed the full multisensory experience: light choreography, audio texture, dramatic timing</li>
     <li>Built a working live prototype, tested in real gameplay conditions</li>
+    <li>Designed and deployed as a standalone third-party application within the Philips Hue ecosystem</li>
   </ul>
 </section>
 
