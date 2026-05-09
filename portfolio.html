@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forbidden Island — Ambient Experience System</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    background: #f4f4f4;
+    color: #111;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 80px 32px 120px;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: auto;
+    padding: 80px 0 72px;
+    border-bottom: 1px solid #d0d0d0;
+    margin-bottom: 72px;
+  }
+
+  .label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #777;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: #111;
+    margin-bottom: 20px;
+  }
+
+  .hero-desc {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #444;
+    max-width: 560px;
+  }
+
+  .meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 36px;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .meta-key {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+  }
+
+  .meta-val {
+    font-size: 13px;
+    font-weight: 500;
+    color: #222;
+  }
+
+  /* Sections */
+  section {
+    margin-bottom: 64px;
+  }
+
+  h2 {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #222;
+    margin-bottom: 16px;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  /* Statement block */
+  .statement {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #111;
+    border-left: 3px solid #111;
+    padding-left: 20px;
+    margin: 32px 0;
+  }
+
+  /* System diagram */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin: 28px 0;
+    row-gap: 12px;
+  }
+
+  .flow-node {
+    background: #fff;
+    border: 1px solid #d0d0d0;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #111;
+  }
+
+  .flow-arrow {
+    font-size: 14px;
+    color: #aaa;
+    padding: 0 8px;
+  }
+
+  /* Layers */
+  .layers {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin: 28px 0;
+  }
+
+  .layer {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+  }
+
+  .layer-name {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #111;
+    min-width: 100px;
+    flex-shrink: 0;
+  }
+
+  .layer-desc {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  /* Scenarios */
+  .scenarios {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin: 28px 0;
+  }
+
+  .scenario {
+    padding: 18px 20px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+  }
+
+  .scenario-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #111;
+    margin-bottom: 6px;
+  }
+
+  .scenario-desc {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.55;
+  }
+
+  /* Decisions table */
+  .decisions {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 28px 0;
+    font-size: 14px;
+  }
+
+  .decisions th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    padding: 10px 16px;
+    border-bottom: 1px solid #d0d0d0;
+    background: #ebebeb;
+  }
+
+  .decisions td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e8e8e8;
+    color: #222;
+    line-height: 1.55;
+    background: #fff;
+    vertical-align: top;
+  }
+
+  .decisions td:first-child {
+    font-weight: 600;
+    color: #111;
+    width: 40%;
+  }
+
+  /* Contributions */
+  .contrib-list {
+    list-style: none;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .contrib-list li {
+    font-size: 14px;
+    color: #222;
+    line-height: 1.55;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .contrib-list li::before {
+    content: '—';
+    color: #aaa;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  /* Tags */
+  .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #555;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    background: #fff;
+  }
+
+  /* Closing */
+  .closing {
+    padding: 48px 0 0;
+    border-top: 1px solid #d0d0d0;
+    margin-top: 72px;
+  }
+
+  .closing p {
+    font-size: 17px;
+    line-height: 1.7;
+    color: #333;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 48px 20px 80px; }
+    .hero { padding: 56px 0 48px; }
+    .flow-node { font-size: 11px; padding: 8px 12px; }
+    .meta { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="label">Interaction Design &nbsp;·&nbsp; Ambient Computing &nbsp;·&nbsp; IoT</span>
+  <h1>Forbidden Island<br>Ambient Experience System</h1>
+  <p class="hero-desc">
+    A live companion system that connects board game states to environmental light and sound —
+    transforming the room into an active layer of the game.
+  </p>
+  <div class="meta">
+    <div class="meta-item">
+      <span class="meta-key">Role</span>
+      <span class="meta-val">Lead Designer</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-key">Type</span>
+      <span class="meta-val">Working Prototype</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-key">Integration</span>
+      <span class="meta-val">Philips Hue + Web Audio API</span>
+    </div>
+  </div>
+</div>
+
+<section>
+  <h2>Problem</h2>
+  <p>
+    Forbidden Island is a cooperative, role-playing board game with well-designed mechanics and
+    defined tension curves. The game works. What works against it is the room.
+    Static ambient lighting carries no information, no mood, no urgency — it signals that nothing
+    is happening, regardless of what the board says. In a game where presence and group engagement
+    are central, ordinary light quietly flattens player focus, reduces felt stakes, and pulls
+    attention away from the shared experience.
+  </p>
+  <div class="statement">
+    Light is an underused variable in cooperative board game experience — and an unconsidered one
+    shapes the room against the game.
+  </div>
+</section>
+
+<section>
+  <h2>Hypothesis</h2>
+  <p>
+    What if game states could be translated into environmental feedback instead of being tracked cognitively?
+  </p>
+  <p>
+    The goal was not to automate gameplay or replace the analog experience.
+    It was to externalize invisible states — make them perceptible as shared, sensory events
+    distributed across the room rather than silently held in players' heads.
+  </p>
+</section>
+
+<section>
+  <h2>System Design</h2>
+  <p>
+    This is not a UI project. It is a system that maps player actions to environmental outputs
+    across three synchronized layers.
+  </p>
+
+  <div class="flow">
+    <div class="flow-node">Player Action</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">Event Trigger</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">State Mapping</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">Multimodal Output</div>
+  </div>
+
+  <div class="layers">
+    <div class="layer">
+      <span class="layer-name">Physical</span>
+      <span class="layer-desc">The board, the players, the core cooperative gameplay</span>
+    </div>
+    <div class="layer">
+      <span class="layer-name">Digital</span>
+      <span class="layer-desc">A mobile interface that tracks state and dispatches triggers</span>
+    </div>
+    <div class="layer">
+      <span class="layer-name">Environmental</span>
+      <span class="layer-desc">Philips Hue lighting and spatial audio responding in real time</span>
+    </div>
+  </div>
+
+  <p>The interface does not hold the experience. It orchestrates the room.</p>
+</section>
+
+<section>
+  <h2>Interaction Model</h2>
+  <p>
+    The system is intentionally manual. Players trigger events themselves:
+    a Waters Rise card drawn, a tile sunk, a treasure secured, a helicopter called.
+    Nothing fires without a deliberate tap.
+  </p>
+  <p>
+    This decision preserves social awareness and group coordination.
+    Manual triggering keeps the shared responsibility of the game intact —
+    and turns each trigger into a ritualistic, collective act rather than a background automation.
+  </p>
+</section>
+
+<section>
+  <h2>Key Scenarios</h2>
+  <div class="scenarios">
+    <div class="scenario">
+      <div class="scenario-title">Waters Rise</div>
+      <div class="scenario-desc">
+        Escalating audio cue with a bass sweep. Room lighting shifts progressively deeper into the blue spectrum
+        across ten mapped levels, from pale sky to near-black. Tension in the music layer increases proportionally.
+      </div>
+    </div>
+    <div class="scenario">
+      <div class="scenario-title">Tile Sank</div>
+      <div class="scenario-desc">
+        Four drama stages — Calm, Tense, Critical, Chaos — each with distinct audio texture and light behavior.
+        Early stages: brief dimming. Later stages: sharp blinks with rumble tone, conveying structural collapse.
+      </div>
+    </div>
+    <div class="scenario">
+      <div class="scenario-title">Treasure Collected</div>
+      <div class="scenario-desc">
+        Each treasure maps to a distinct color (amber, red, green, cyan) and a unique ascending tone sequence.
+        The room floods with color for two seconds, then returns to water-state baseline.
+      </div>
+    </div>
+    <div class="scenario">
+      <div class="scenario-title">Helicopter Rescue</div>
+      <div class="scenario-desc">
+        Rhythmic mechanical audio. Light strobes gold in a pattern suggesting departure, then settles.
+      </div>
+    </div>
+    <div class="scenario">
+      <div class="scenario-title">Game Over / Victory</div>
+      <div class="scenario-desc">
+        Game over: slow descending tones, room dims to deep red and holds.
+        Victory: four-color sweep across the room, resolving to warm white.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Design Decisions</h2>
+  <table class="decisions">
+    <thead>
+      <tr>
+        <th>Decision</th>
+        <th>Rationale</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>No automation</td>
+        <td>Preserves social gameplay and shared responsibility. Automation would turn ritual into background noise.</td>
+      </tr>
+      <tr>
+        <td>Single shared interface</td>
+        <td>Avoids fragmenting attention across individual screens. One trigger point keeps coordination visible to the group.</td>
+      </tr>
+      <tr>
+        <td>Soft transitions over abrupt changes</td>
+        <td>Gradual light and audio shifts maintain immersion. Hard cuts would break the perceptual flow of tension-building.</td>
+      </tr>
+      <tr>
+        <td>Ambient lighting, not on-screen alerts</td>
+        <td>Shifts focus from device to physical environment. The room becomes expressive; the phone recedes.</td>
+      </tr>
+      <tr>
+        <td>Procedural audio synthesis</td>
+        <td>Each sound is generated in real time (Web Audio API), not sampled. Allows dynamic parameterization by game state.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Contribution</h2>
+  <ul class="contrib-list">
+    <li>Defined the product concept and system interaction model</li>
+    <li>Designed the state-to-output mapping logic and event architecture</li>
+    <li>Designed and built the mobile trigger interface (HTML/CSS/JS)</li>
+    <li>Integrated the system with Philips Hue via REST API with CIE xy color mapping</li>
+    <li>Designed the full multisensory experience: light choreography, audio texture, dramatic timing</li>
+    <li>Built a working live prototype, tested in real gameplay conditions</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Positioning</h2>
+  <p>
+    This project sits at the intersection of interaction design, ambient computing, and IoT-driven experience.
+    It demonstrates how digital systems can extend beyond screens and into shared physical environments —
+    making invisible states perceptible and silent moments felt.
+  </p>
+  <p>
+    Rather than replacing the analog experience, the system augments it.
+    Design here is not interface creation. It is the orchestration of interaction across people, devices, and space.
+  </p>
+  <div class="tags">
+    <span class="tag">Interaction Design</span>
+    <span class="tag">Ambient Computing</span>
+    <span class="tag">IoT</span>
+    <span class="tag">Multisensory Design</span>
+    <span class="tag">Prototyping</span>
+    <span class="tag">System Design</span>
+  </div>
+</section>
+
+<div class="closing">
+  <p>
+    The system is a working live prototype, currently being prepared for testing
+    with board game communities and Philips Hue user groups.
+    Focus areas: engagement during gameplay, emotional response to key moments, social impact on replay value.
+  </p>
+</div>
+
+</body>
+</html>
