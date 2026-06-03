@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -44,7 +44,7 @@ html,body{height:100%;background:var(--ink-950);color:var(--txt);font-family:'Cr
 /* === HUE SETUP === */
 #s-hue{padding:0}
 .sh-head{padding:1.5rem 1.25rem 1.1rem;border-bottom:1px solid var(--ink-700);display:flex;align-items:center;gap:.875rem}
-.sh-back{width:40px;height:40px;border:1px solid var(--ink-600);border-radius:var(--r-md);background:none;color:var(--txt-s);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s}
+.sh-back{width:40px;height:40px;border:1px solid var(--ink-600);border-radius:var(--r-md);background:none;color:var(--txt-s);font-size:1.1rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s}
 .sh-back:active{background:var(--ink-700)}
 .sh-title{font-family:'Cinzel',serif;font-size:.95rem;font-weight:600;letter-spacing:.08em}
 .sh-body{padding:1.25rem;flex:1;overflow-y:auto}
@@ -69,6 +69,10 @@ html,body{height:100%;background:var(--ink-950);color:var(--txt);font-family:'Cr
 .btn-play{background:linear-gradient(135deg,rgba(59,130,246,.22),rgba(29,78,216,.32));border-color:var(--blue-400);color:var(--blue-100);font-size:.84rem}
 .info-box{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.2);border-radius:var(--r-md);padding:.85rem 1rem;font-size:.84rem;color:var(--txt-s);line-height:1.6;margin:1rem 0}
 .info-box strong{color:var(--blue-300);font-style:normal}
+.info-box code{font-size:.8rem;background:rgba(255,255,255,.06);padding:.1rem .3rem;border-radius:4px}
+.warn-box{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.22);border-radius:var(--r-md);padding:.85rem 1rem;font-size:.82rem;color:var(--txt-s);line-height:1.75;margin-top:.75rem}
+.warn-box strong{color:var(--amber-300);font-style:normal}
+.warn-box code{font-size:.78rem;background:rgba(255,255,255,.06);padding:.1rem .3rem;border-radius:4px;color:var(--blue-300)}
 .log-box{background:var(--ink-900);border:1px solid var(--ink-700);border-radius:var(--r-md);padding:.7rem;height:110px;overflow-y:auto;font-family:'Courier New',monospace;font-size:.7rem;line-height:1.65;margin-top:.75rem}
 .lk{color:var(--green-400)}.le{color:var(--red-400)}.li{color:var(--amber-400)}.ln{color:var(--txt-s)}
 
@@ -172,19 +176,19 @@ html,body{height:100%;background:var(--ink-950);color:var(--txt);font-family:'Cr
 <div id="s-onboard" class="screen vis">
   <div style="text-align:center;margin-bottom:2.5rem">
     <div class="ob-logo">FORBIDDEN<br>ISLAND</div>
-    <div class="ob-sub">Ses &amp; Atmosfer Asistanı</div>
+    <div class="ob-sub">Sound &amp; Atmosphere Assistant</div>
   </div>
-  <p class="ob-q">Nasıl oynamak istiyorsun?</p>
+  <p class="ob-q">How do you want to play?</p>
   <div class="ob-choices">
     <button class="choice c-hue" onclick="chooseHue()">
       <span class="ch-icon">💡</span>
-      <div class="ch-title">Philips Hue + Ses</div>
-      <div class="ch-desc">Işıklar oyunla senkronize olur. Oda canlı bir atmosfere dönüşür.</div>
+      <div class="ch-title">Philips Hue + Sound</div>
+      <div class="ch-desc">Lights sync with the game. Your room becomes a living atmosphere.</div>
     </button>
     <button class="choice c-snd" onclick="chooseSoundOnly()">
       <span class="ch-icon">🔊</span>
-      <div class="ch-title">Sadece Ses</div>
-      <div class="ch-desc">Ses efektleri ve müzikle atmosfer yarat. Hue gerekmez.</div>
+      <div class="ch-title">Sound Only</div>
+      <div class="ch-desc">Create atmosphere with sound effects and music. No Hue needed.</div>
     </button>
   </div>
 </div>
@@ -193,33 +197,51 @@ html,body{height:100%;background:var(--ink-950);color:var(--txt);font-family:'Cr
 <div id="s-hue" class="screen">
   <div class="sh-head">
     <button class="sh-back" onclick="goScreen('s-onboard')">←</button>
-    <div class="sh-title">Philips Hue Bağlantısı</div>
+    <div class="sh-title">Philips Hue Connection</div>
   </div>
   <div class="sh-body">
     <div class="hue-bar">
       <div class="hue-dot" id="hueDot"></div>
       <div>
-        <div class="hue-lbl" id="hueLbl">Bağlantı bekleniyor</div>
-        <div class="hue-sub" id="hueSub">Bridge IP ve kullanıcı adı gir</div>
+        <div class="hue-lbl" id="hueLbl">Waiting for connection</div>
+        <div class="hue-sub" id="hueSub">Enter Bridge IP or auto-discover</div>
       </div>
     </div>
+
     <div class="fg">
-      <label class="fl" for="bIp">Bridge IP Adresi</label>
+      <label class="fl" for="bIp">Bridge IP Address</label>
       <input class="fi" id="bIp" type="text" placeholder="192.168.1.x" inputmode="decimal" autocomplete="off">
     </div>
-    <div class="fg">
-      <label class="fl" for="bUser">API Kullanıcı Adı</label>
-      <input class="fi" id="bUser" type="text" placeholder="xxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off">
-    </div>
-    <button class="btn btn-blue" onclick="testHue()">Bağlantıyı Test Et</button>
-    <button class="btn btn-ghost" onclick="discoverBridge()">Bridge'i Otomatik Bul</button>
-    <button class="btn btn-play" id="btnPlay" style="display:none" onclick="startGame()">▶&nbsp; Oyuna Geç</button>
+
+    <button class="btn btn-ghost" onclick="discoverBridge()">Auto-Discover Bridge</button>
+
     <div class="info-box">
-      <strong>İlk kurulum:</strong> Bridge butonuna bas, "Otomatik Bul"a tıkla.
-      Kullanıcı adı yoksa <strong>http://[ip]/debug/clip.html</strong> adresinde
-      <code style="color:var(--blue-300)">{"devicetype":"forbidden_island"}</code> POST at.
+      <strong>Before connecting:</strong> Press the physical button on top of your Hue Bridge, then tap Connect within 30 seconds.
     </div>
-    <div class="log-box" id="hLog"><div class="ln">Bağlantı logu burada görünür...</div></div>
+
+    <button class="btn btn-blue" onclick="connectHue()">Connect</button>
+    <button class="btn btn-play" id="btnPlay" style="display:none" onclick="startGame()">▶&nbsp; Start Game</button>
+
+    <div class="log-box" id="hLog"><div class="ln">Connection log will appear here...</div></div>
+
+    <!-- Manual Connection -->
+    <div style="margin-top:1rem;margin-bottom:1.5rem">
+      <button class="btn btn-ghost" onclick="toggleManual()" style="margin-bottom:0;font-size:.7rem;color:var(--amber-400);border-color:rgba(251,191,36,.25)">⚠ Manual Connection</button>
+      <div id="manualSection" style="display:none">
+        <div class="warn-box">
+          <strong>If auto-connect fails, follow these steps:</strong><br><br>
+          1. Open your phone's browser and go to:<br>
+          <code>http://[your-bridge-ip]/debug/clip.html</code><br><br>
+          2. Set <strong>URL</strong> to <code>/api</code> and <strong>Method</strong> to <code>POST</code><br><br>
+          3. In <strong>Message Body</strong>, paste exactly:<br>
+          <code>{"devicetype":"forbidden_island"}</code><br><br>
+          4. Press the physical button on your Bridge<br><br>
+          5. Within 30 seconds, tap the <strong>POST</strong> button on the page<br><br>
+          6. Copy the <strong>username</strong> from the response — letters and numbers only, no dashes<br><br>
+          7. In game, tap ⚙ Settings and enter your IP and username manually
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -229,7 +251,7 @@ html,body{height:100%;background:var(--ink-950);color:var(--txt);font-family:'Cr
 
   <!-- Water Column -->
   <div class="w-col">
-    <div class="w-lbl">SU<br>SEVİ<br>YESİ</div>
+    <div class="w-lbl">WATER<br>LEVEL</div>
     <div class="w-track" id="wTrack"
       onpointerdown="dragStart(event)"
       onpointermove="dragMove(event)"
@@ -244,7 +266,7 @@ html,body{height:100%;background:var(--ink-950);color:var(--txt);font-family:'Cr
     <div class="w-name" id="wName">Novice</div>
     <div class="tile-ctr">
       <div class="tile-ctr-n" id="tileN">0</div>
-      <div class="tile-ctr-l">BATAN</div>
+      <div class="tile-ctr-l">SUNK</div>
     </div>
   </div>
 
@@ -254,68 +276,68 @@ html,body{height:100%;background:var(--ink-950);color:var(--txt);font-family:'Cr
       <div class="g-title">⚓ FORBIDDEN ISLAND</div>
       <div class="g-top-r">
         <button class="ico-btn on" id="mBtn" onclick="toggleMusic()">♪</button>
-        <button class="ico-btn" onclick="openModal('m-settings')">⚙</button>
+        <button class="ico-btn" onclick="openSettings()">⚙</button>
       </div>
     </div>
 
     <div class="g-scroll">
-      <p class="sec-lbl">ANA OLAY</p>
+      <p class="sec-lbl">MAIN EVENT</p>
       <button class="btn-wr" onclick="doWatersRise()">
         <span class="wr-icon">🌊</span>
         <div>
           <div class="wr-title">WATERS RISE!</div>
-          <div class="wr-sub">Kart çekildi — su yükseliyor</div>
+          <div class="wr-sub">Card drawn — waters rising</div>
         </div>
       </button>
 
       <button class="btn-ts" onclick="doTileSank()">
         <span class="ts-icon">🪨</span>
         <div style="flex:1">
-          <div class="ts-title">Karo Battı</div>
-          <div class="ts-sub" id="dramaDesc">Ada küçülüyor</div>
+          <div class="ts-title">Tile Sank</div>
+          <div class="ts-sub" id="dramaDesc">Island shrinking</div>
         </div>
-        <div class="drama-badge" id="dramaBadge">Sakin</div>
+        <div class="drama-badge" id="dramaBadge">Calm</div>
       </button>
 
-      <p class="sec-lbl">HAZİNELER</p>
+      <p class="sec-lbl">TREASURES</p>
       <div class="tr-grid">
         <button class="btn-tr t-earth" id="tr-earth" onclick="doTreasure('earth')">
           <span class="tr-icon">🪨</span>
           <div class="tr-name">Earth Stone</div>
-          <div class="tr-gem">Toprak Taşı</div>
+          <div class="tr-gem">Earth Relic</div>
         </button>
         <button class="btn-tr t-fire" id="tr-fire" onclick="doTreasure('fire')">
           <span class="tr-icon">🔥</span>
           <div class="tr-name">Crystal of Fire</div>
-          <div class="tr-gem">Ateş Kristali</div>
+          <div class="tr-gem">Fire Crystal</div>
         </button>
         <button class="btn-tr t-wind" id="tr-wind" onclick="doTreasure('wind')">
           <span class="tr-icon">💨</span>
           <div class="tr-name">Statue of Wind</div>
-          <div class="tr-gem">Rüzgar Heykeli</div>
+          <div class="tr-gem">Wind Statue</div>
         </button>
         <button class="btn-tr t-ocean" id="tr-ocean" onclick="doTreasure('ocean')">
           <span class="tr-icon">🏺</span>
           <div class="tr-name">Ocean's Chalice</div>
-          <div class="tr-gem">Deniz Kadehi</div>
+          <div class="tr-gem">Ocean Chalice</div>
         </button>
       </div>
 
-      <p class="sec-lbl">ÖZEL KARTLAR</p>
+      <p class="sec-lbl">SPECIAL CARDS</p>
       <div class="sp-row">
         <button class="btn-sp" onclick="doHeli()">
           <span class="sp-icon">🚁</span>
-          <div><div class="sp-title">Helicopter Lift</div><div class="sp-sub">Taşıma kartı</div></div>
+          <div><div class="sp-title">Helicopter Lift</div><div class="sp-sub">Transport card</div></div>
         </button>
         <button class="btn-sp" onclick="doSandbag()">
           <span class="sp-icon">🪜</span>
-          <div><div class="sp-title">Sandbag</div><div class="sp-sub">Karo kurtarıldı</div></div>
+          <div><div class="sp-title">Sandbag</div><div class="sp-sub">Tile saved</div></div>
         </button>
       </div>
 
       <div class="end-row">
         <button class="btn-go" onclick="doGameOver()">💀 Game Over</button>
-        <button class="btn-vic" onclick="doVictory()">🏆 Zafer!</button>
+        <button class="btn-vic" onclick="doVictory()">🏆 Victory!</button>
       </div>
       <div style="height:1.5rem"></div>
     </div>
@@ -326,13 +348,36 @@ html,body{height:100%;background:var(--ink-950);color:var(--txt);font-family:'Cr
 <div class="modal-bg" id="m-settings">
   <div class="modal">
     <span class="m-icon">⚙️</span>
-    <div class="m-title">Hue Ayarları</div>
+    <div class="m-title">Hue Settings</div>
+
+    <!-- Connection status -->
+    <div id="sConnBar" style="display:flex;align-items:flex-start;gap:.75rem;background:var(--ink-900);border:1px solid var(--ink-700);border-radius:var(--r-md);padding:.85rem 1rem;margin-bottom:1rem;text-align:left">
+      <div id="sConnDot" style="width:10px;height:10px;border-radius:50%;background:var(--ink-500);flex-shrink:0;margin-top:3px;transition:all .3s"></div>
+      <div style="flex:1">
+        <div id="sConnLbl" style="font-family:'Cinzel',serif;font-size:.74rem;letter-spacing:.06em;color:var(--txt)">Checking…</div>
+        <div id="sConnIp" style="font-size:.76rem;color:var(--txt-m);font-style:italic;margin-top:2px"></div>
+        <div id="sConnReasons" style="display:none;margin-top:.6rem;font-size:.76rem;color:var(--txt-s);line-height:1.7"></div>
+      </div>
+    </div>
+
     <div style="text-align:left;margin-bottom:.875rem">
       <div class="fg"><label class="fl" for="sBip">Bridge IP</label><input class="fi" id="sBip" type="text" placeholder="192.168.1.x" inputmode="decimal"></div>
-      <div class="fg" style="margin-bottom:0"><label class="fl" for="sBu">API Kullanıcı Adı</label><input class="fi" id="sBu" type="text" placeholder="xxxxxxxxxx"></div>
+      <div class="fg" style="margin-bottom:0"><label class="fl" for="sBu">API Username</label><input class="fi" id="sBu" type="text" placeholder="xxxxxxxxxx"></div>
     </div>
-    <button class="m-btn" style="background:rgba(59,130,246,.14);border-color:var(--blue-500);color:var(--blue-200)" onclick="saveSettings()">Kaydet &amp; Test Et</button>
-    <button class="m-btn" style="background:var(--ink-700);border-color:var(--ink-600);color:var(--txt-s)" onclick="closeModal('m-settings')">İptal</button>
+    <button class="m-btn" style="background:rgba(59,130,246,.14);border-color:var(--blue-500);color:var(--blue-200)" onclick="saveSettings()">Save &amp; Test</button>
+    <button class="m-btn" style="background:rgba(220,38,38,.08);border-color:var(--red-800);color:var(--red-400)" onclick="disconnectHue()">Disconnect</button>
+    <button class="m-btn" style="background:var(--ink-700);border-color:var(--ink-600);color:var(--txt-s)" onclick="closeModal('m-settings')">Close</button>
+  </div>
+</div>
+
+<!-- DISCONNECT CONFIRM MODAL -->
+<div class="modal-bg" id="m-disconnect">
+  <div class="modal">
+    <span class="m-icon">🔌</span>
+    <div class="m-title">Remove Connection?</div>
+    <div class="m-desc">This will clear your saved Bridge credentials. You will need to reconnect to use Hue lighting.</div>
+    <button class="m-btn" style="background:rgba(220,38,38,.14);border-color:var(--red-600);color:var(--red-300)" onclick="confirmDisconnect()">Remove Connection</button>
+    <button class="m-btn" style="background:var(--ink-700);border-color:var(--ink-600);color:var(--txt-s)" onclick="closeModal('m-disconnect')">Cancel</button>
   </div>
 </div>
 
@@ -340,10 +385,10 @@ html,body{height:100%;background:var(--ink-950);color:var(--txt);font-family:'Cr
 <div class="modal-bg" id="m-go">
   <div class="modal">
     <span class="m-icon">💀</span>
-    <div class="m-title" style="color:var(--red-400)">Ada Battı</div>
-    <div class="m-desc">Sular her şeyi yuttu. Takım adalarda kayboldu.</div>
-    <button class="m-btn" style="background:rgba(220,38,38,.14);border-color:var(--red-600);color:var(--red-300)" onclick="resetGame()">Yeni Oyun</button>
-    <button class="m-btn" style="background:var(--ink-700);border-color:var(--ink-600);color:var(--txt-s)" onclick="closeModal('m-go')">Kapat</button>
+    <div class="m-title" style="color:var(--red-400)">Island Sank</div>
+    <div class="m-desc">The waters swallowed everything. The team is lost.</div>
+    <button class="m-btn" style="background:rgba(220,38,38,.14);border-color:var(--red-600);color:var(--red-300)" onclick="resetGame()">New Game</button>
+    <button class="m-btn" style="background:var(--ink-700);border-color:var(--ink-600);color:var(--txt-s)" onclick="closeModal('m-go')">Close</button>
   </div>
 </div>
 
@@ -351,10 +396,10 @@ html,body{height:100%;background:var(--ink-950);color:var(--txt);font-family:'Cr
 <div class="modal-bg" id="m-vic">
   <div class="modal">
     <span class="m-icon">🏆</span>
-    <div class="m-title" style="color:var(--amber-300)">Zafer!</div>
-    <div class="m-desc">Tüm hazineler kurtarıldı. Helikopter adayı terk etti!</div>
-    <button class="m-btn" style="background:rgba(217,119,6,.18);border-color:var(--amber-500);color:var(--amber-200)" onclick="resetGame()">Yeni Oyun</button>
-    <button class="m-btn" style="background:var(--ink-700);border-color:var(--ink-600);color:var(--txt-s)" onclick="closeModal('m-vic')">Kapat</button>
+    <div class="m-title" style="color:var(--amber-300)">Victory!</div>
+    <div class="m-desc">All treasures rescued. The helicopter has left the island!</div>
+    <button class="m-btn" style="background:rgba(217,119,6,.18);border-color:var(--amber-500);color:var(--amber-200)" onclick="resetGame()">New Game</button>
+    <button class="m-btn" style="background:var(--ink-700);border-color:var(--ink-600);color:var(--txt-s)" onclick="closeModal('m-vic')">Close</button>
   </div>
 </div>
 
@@ -373,10 +418,10 @@ const LNAMES=['','Novice','Novice','Normal','Normal','Elite','Elite','Elite','Le
 
 /* Tile drama stages */
 const DRAMA=[
-  {min:0,max:3,  lbl:'Sakin',  desc:'Ada küçülüyor',       c:'var(--txt-m)'},
-  {min:4,max:7,  lbl:'Gergin', desc:'Tehlike yaklaşıyor',  c:'var(--amber-400)'},
-  {min:8,max:11, lbl:'Kritik', desc:'Ada parçalanıyor!',   c:'var(--red-400)'},
-  {min:12,max:99,lbl:'Kaos',   desc:'Kurtuluş yok artık…', c:'#f87171'},
+  {min:0,max:3,  lbl:'Calm',     desc:'Island shrinking',      c:'var(--txt-m)'},
+  {min:4,max:7,  lbl:'Tense',    desc:'Danger approaching',    c:'var(--amber-400)'},
+  {min:8,max:11, lbl:'Critical', desc:'Island breaking apart!', c:'var(--red-400)'},
+  {min:12,max:99,lbl:'Chaos',    desc:'No escape now…',         c:'#f87171'},
 ];
 function dramaStage(){return DRAMA.findIndex(d=>ST.tiles>=d.min&&ST.tiles<=d.max)||3}
 
@@ -677,39 +722,88 @@ function toggleMusic(){
 }
 
 /* ============ HUE CONNECTION ============ */
-async function testHue(){
-  const ip=document.getElementById('bIp').value.trim(),user=document.getElementById('bUser').value.trim();
-  if(!ip||!user){hlog('IP ve kullanıcı adı gerekli.','le');return;}
-  ST.hue.ip=ip;ST.hue.user=user;
-  setDot('busy','Bağlanıyor...',ip);hlog('Deneniyor: '+ip,'li');
-  const data=await hReq('GET','/lights');
-  if(data&&!Array.isArray(data)){
-    ST.hue.conn=true;
-    const cnt=Object.keys(data).length;
-    setDot('conn','Bağlı — '+cnt+' ışık',ip);hlog('Başarılı. '+cnt+' ışık.','lk');
-    ls('fi_ip',ip);ls('fi_user',user);
-    document.getElementById('btnPlay').style.display='flex';
-  } else {
-    ST.hue.conn=false;setDot('err','Hata','IP veya kullanıcı adı yanlış');hlog('Bağlantı kurulamadı.','le');
-  }
-}
 async function discoverBridge(){
-  hlog('Bridge aranıyor…','li');
+  hlog('Searching for Bridge…','li');
+  setDot('busy','Searching…','Looking on your network');
   try{
     const r=await fetch('https://discovery.meethue.com/'),d=await r.json();
-    if(d&&d[0]&&d[0].internalipaddress){document.getElementById('bIp').value=d[0].internalipaddress;hlog('Bulundu: '+d[0].internalipaddress,'lk');}
-    else hlog('Bridge bulunamadı.','le');
-  }catch(e){hlog('Discovery hatası.','le');}
+    if(d&&d[0]&&d[0].internalipaddress){
+      document.getElementById('bIp').value=d[0].internalipaddress;
+      hlog('Found: '+d[0].internalipaddress,'lk');
+      setDot('','Waiting for connection','Bridge found — press Connect');
+      return;
+    }
+  }catch(e){}
+  hlog('Trying local hostname…','li');
+  try{
+    const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),3000));
+    const r2=await Promise.race([fetch('http://philips-hue.home/api/config'),timeout]);
+    const d2=await r2.json();
+    if(d2&&d2.ipaddress){
+      document.getElementById('bIp').value=d2.ipaddress;
+      hlog('Found: '+d2.ipaddress,'lk');
+      setDot('','Waiting for connection','Bridge found — press Connect');
+      return;
+    }
+  }catch(e){}
+  setDot('err','Not found','Enter IP manually');
+  hlog('Bridge not found. Open Philips Hue app → Settings → My Hue System → Bridge → IP Address, then enter it manually.','le');
 }
+
+async function connectHue(){
+  const ip=document.getElementById('bIp').value.trim();
+  if(!ip){hlog('Enter Bridge IP first.','le');return;}
+  ST.hue.ip=ip;
+  setDot('busy','Connecting…','Waiting for Bridge response');
+  hlog('Connecting to '+ip+'…','li');
+  try{
+    const r=await fetch('http://'+ip+'/api',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({devicetype:'forbidden_island'})
+    });
+    const d=await r.json();
+    if(d&&d[0]&&d[0].success&&d[0].success.username){
+      const user=d[0].success.username;
+      ST.hue.user=user; ST.hue.conn=true;
+      ls('fi_ip',ip); ls('fi_user',user);
+      const lights=await hReq('GET','/lights');
+      const cnt=lights&&!Array.isArray(lights)?Object.keys(lights).length:0;
+      setDot('conn','Connected'+(cnt?' — '+cnt+' lights':''),ip);
+      hlog('Connected successfully'+(cnt?'. '+cnt+' lights found.':'.') ,'lk');
+      document.getElementById('btnPlay').style.display='flex';
+    } else if(d&&d[0]&&d[0].error){
+      if(d[0].error.type===101){
+        setDot('err','Button not pressed','Try again');
+        hlog('Bridge button not pressed. Press the physical button on your Bridge, then tap Connect within 30 seconds.','le');
+      } else {
+        setDot('err','Error','');
+        hlog('Error: '+(d[0].error.description||'Unknown error'),'le');
+      }
+    } else {
+      setDot('err','Unexpected response','Check IP');
+      hlog('Unexpected response. Check your Bridge IP address.','le');
+    }
+  }catch(e){
+    setDot('err','Unreachable','Check IP and Wi-Fi');
+    hlog('Cannot reach Bridge. Make sure you are on the same Wi-Fi network as your Hue Bridge.','le');
+  }
+}
+
+function toggleManual(){
+  const s=document.getElementById('manualSection');
+  if(s) s.style.display=s.style.display==='none'?'block':'none';
+}
+
 function setDot(cls,lbl,sub){
-  const d=document.getElementById('hueDot'); if(d) d.className='hue-dot '+cls;
+  const d=document.getElementById('hueDot'); if(d) d.className='hue-dot'+(cls?' '+cls:'');
   const l=document.getElementById('hueLbl'),s=document.getElementById('hueSub');
   if(l) l.textContent=lbl; if(s) s.textContent=sub;
 }
 function hlog(msg,cls){
   const el=document.getElementById('hLog'); if(!el) return;
-  const t=new Date().toLocaleTimeString('tr-TR',{hour12:false});
-  const d=document.createElement('div'); d.className=cls; d.textContent=`[${t}] ${msg}`;
+  const t=new Date().toLocaleTimeString('en-US',{hour12:false});
+  const d=document.createElement('div'); d.className=cls; d.textContent='['+t+'] '+msg;
   el.appendChild(d); el.scrollTop=el.scrollHeight;
 }
 
@@ -719,7 +813,6 @@ async function chooseHue(){
   const sip=lg('fi_ip'),suser=lg('fi_user');
   if(sip&&suser){ST.hue.ip=sip;ST.hue.user=suser;const d=await hReq('GET','/lights');if(d&&!Array.isArray(d)){ST.hue.conn=true;startGame();return;}}
   if(sip) document.getElementById('bIp').value=sip;
-  if(suser) document.getElementById('bUser').value=suser;
   goScreen('s-hue');
 }
 function chooseSoundOnly(){ST.mode='sound';ST.hue.conn=false;startGame();}
@@ -729,17 +822,51 @@ function startGame(){
   if(ST.musicOn) startMusic();
 }
 
+/* ============ SETTINGS ============ */
+async function openSettings(){
+  document.getElementById('sBip').value=ST.hue.ip||lg('fi_ip');
+  document.getElementById('sBu').value=ST.hue.user||lg('fi_user');
+  openModal('m-settings');
+  const ip=ST.hue.ip||lg('fi_ip'),user=ST.hue.user||lg('fi_user');
+  const dot=document.getElementById('sConnDot'),lbl=document.getElementById('sConnLbl'),
+        ipEl=document.getElementById('sConnIp'),reasons=document.getElementById('sConnReasons');
+  if(!ip||!user){
+    dot.style.background='var(--ink-500)';dot.style.boxShadow='none';
+    lbl.textContent='No connection saved';ipEl.textContent='';reasons.style.display='none';return;
+  }
+  dot.style.background='var(--amber-400)';dot.style.boxShadow='none';
+  lbl.textContent='Checking…';ipEl.textContent=ip;reasons.style.display='none';
+  const d=await hReq('GET','/lights');
+  if(d&&!Array.isArray(d)){
+    dot.style.background='var(--green-400)';dot.style.boxShadow='0 0 8px rgba(74,222,128,.45)';
+    lbl.textContent='Connected — '+Object.keys(d).length+' lights';
+    reasons.style.display='none';
+  } else {
+    dot.style.background='var(--red-400)';dot.style.boxShadow='none';
+    lbl.textContent='Not connected';
+    reasons.innerHTML='Possible reasons:<br>• Bridge may be turned off<br>• Not on the same Wi-Fi network<br>• Bridge IP may have changed — re-pair to update';
+    reasons.style.display='block';
+  }
+}
+
 async function saveSettings(){
   const ip=document.getElementById('sBip').value.trim(),user=document.getElementById('sBu').value.trim();
   ST.hue.ip=ip;ST.hue.user=user;
   const d=await hReq('GET','/lights');
   if(d&&!Array.isArray(d)){ST.hue.conn=true;ST.mode='hue';ls('fi_ip',ip);ls('fi_user',user);closeModal('m-settings');hWaterLvl(ST.lvl);}
-  else alert('Bağlantı kurulamadı. Bilgileri kontrol et.');
+  else alert('Connection failed. Please check your details.');
 }
-function openSettings(){
-  document.getElementById('sBip').value=ST.hue.ip;
-  document.getElementById('sBu').value=ST.hue.user;
-  openModal('m-settings');
+
+function disconnectHue(){
+  closeModal('m-settings');
+  openModal('m-disconnect');
+}
+
+function confirmDisconnect(){
+  try{localStorage.removeItem('fi_ip');localStorage.removeItem('fi_user');}catch(e){}
+  ST.hue={ip:'',user:'',conn:false};
+  closeModal('m-disconnect');
+  goScreen('s-onboard');
 }
 
 function resetGame(){
@@ -748,8 +875,8 @@ function resetGame(){
   ['earth','fire','wind','ocean'].forEach(id=>{const b=document.getElementById('tr-'+id);if(b) b.classList.remove('claimed');});
   const tn=document.getElementById('tileN'),tb=document.getElementById('dramaBadge'),td=document.getElementById('dramaDesc');
   if(tn){tn.textContent='0';tn.style.color='';}
-  if(tb){tb.textContent='Sakin';tb.style.color='';tb.style.borderColor='';}
-  if(td) td.textContent='Ada küçülüyor';
+  if(tb){tb.textContent='Calm';tb.style.color='';tb.style.borderColor='';}
+  if(td) td.textContent='Island shrinking';
   setLevel(1,false);
   if(ST.hue.conn) hWaterLvl(1);
 }
@@ -763,9 +890,8 @@ function lg(k){try{return localStorage.getItem(k)||'';}catch(e){return '';}}
 
 /* ============ INIT ============ */
 (()=>{
-  const sip=lg('fi_ip'),suser=lg('fi_user');
+  const sip=lg('fi_ip');
   if(sip) document.getElementById('bIp').value=sip;
-  if(suser) document.getElementById('bUser').value=suser;
 })();
 </script>
 </body>
