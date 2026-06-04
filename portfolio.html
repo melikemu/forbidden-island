@@ -301,8 +301,12 @@
     color: #333;
   }
 
+  @media (max-width: 380px) {
+    h1 { font-size: 20px; line-height: 1.2; }
+  }
+
   @media (max-width: 600px) {
-    body { padding: 48px 20px 80px; }
+    body { padding: 48px 20px 40px; }
     .hero { padding: 56px 0 48px; }
     .flow-node { font-size: 11px; padding: 8px 12px; }
     .meta { gap: 20px; }
@@ -549,6 +553,19 @@
     Focus areas: engagement during gameplay, emotional response to key moments, social impact on replay value.
   </p>
 </div>
+
+
+<script>
+  function sendHeight() {
+    window.parent.postMessage(
+      { type: 'iwResizeHeight', value: document.body.scrollHeight },
+      '*'
+    );
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  new ResizeObserver(sendHeight).observe(document.body);
+</script>
 
 </body>
 </html>
