@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Forbidden Island</title>
+<title>Rising Hue</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/framework7@8/css/framework7.bundle.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap">
 <style>
 /* ── Apple System Tokens ── */
 :root {
@@ -23,6 +26,16 @@
   --text-green:#14532D; --text-cyan:#155E75; --text-amber:#78350F;
   --glass:rgba(242,242,247,.82);
   --r:20px; --r-sm:14px; --r-xs:10px;
+  /* Treasure colors */
+  --tr-ocean:#136987; --tr-ocean-bg:rgba(19,105,135,.10);
+  --tr-earth:#7055A8; --tr-earth-bg:rgba(112,85,168,.10);
+  --tr-fire:#A5373D;  --tr-fire-bg:rgba(165,55,61,.10);
+  --tr-wind:#BC8F3B;  --tr-wind-bg:rgba(188,143,59,.10);
+  /* WCAG AAA (7:1) primary / AA (4.5:1) secondary on white */
+  --tr-earth-t1:#3D2870; --tr-earth-t2:#5B3F90;
+  --tr-fire-t1:#6B1B1F;  --tr-fire-t2:#8B2B2F;
+  --tr-wind-t1:#5C4410;  --tr-wind-t2:#7A5A1A;
+  --tr-ocean-t1:#0A3D50; --tr-ocean-t2:#0F5470;
 }
 [data-theme="dark"] {
   --bg:#000;   --bg2:#1C1C1E; --bg3:#2C2C2E;
@@ -39,6 +52,16 @@
   --text-blue:#70B8FF; --text-orange:#FDBA74; --text-red:#FF9090;
   --text-green:#4ADE80; --text-cyan:#64D2FF; --text-amber:#FFD60A;
   --glass:rgba(28,28,30,.88);
+  /* Treasure colors — dark mode */
+  --tr-ocean:#5BB8D4; --tr-ocean-bg:rgba(19,105,135,.20);
+  --tr-earth:#A990D4; --tr-earth-bg:rgba(112,85,168,.22);
+  --tr-fire:#D47A7E;  --tr-fire-bg:rgba(165,55,61,.20);
+  --tr-wind:#D4AE5A;  --tr-wind-bg:rgba(188,143,59,.20);
+  /* WCAG AAA (7:1) primary / AA (4.5:1) secondary on #1C1C1E */
+  --tr-earth-t1:#D4BCF0; --tr-earth-t2:#B89ED8;
+  --tr-fire-t1:#F0A0A3;  --tr-fire-t2:#D88A8D;
+  --tr-wind-t1:#EDD47A;  --tr-wind-t2:#C8B058;
+  --tr-ocean-t1:#7DD4EC; --tr-ocean-t2:#5AADC5;
 }
 
 *,*::before,*::after { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -56,9 +79,11 @@ body { font-family:-apple-system,'SF Pro Display',system-ui,sans-serif; backgrou
 
 /* ── Fake Navbar ── */
 .ios-nav {
-  flex-shrink:0; height:52px;
+  flex-shrink:0;
+  height: calc(52px + env(safe-area-inset-top, 0px));
   display:flex; align-items:center;
-  padding:0 16px; gap:12px;
+  padding: env(safe-area-inset-top, 0px) 16px 0;
+  gap:12px;
   background:var(--glass);
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
@@ -77,7 +102,7 @@ body { font-family:-apple-system,'SF Pro Display',system-ui,sans-serif; backgrou
 .screen-body {
   flex:1; overflow-y:auto;
   -webkit-overflow-scrolling:touch;
-  padding:16px;
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
 }
 .screen-body::-webkit-scrollbar { width:3px; }
 .screen-body::-webkit-scrollbar-track { background:transparent; }
@@ -85,6 +110,7 @@ body { font-family:-apple-system,'SF Pro Display',system-ui,sans-serif; backgrou
 
 /* ── Typography ── */
 .large-title { font-size:clamp(2.1rem,9vw,3rem); font-weight:800; letter-spacing:-.03em; color:var(--lbl); line-height:1.1; }
+.large-title.cinzel { font-family:'Cinzel Decorative', serif; font-weight:700; letter-spacing:.01em; }
 .sec-lbl { font-size:12px; font-weight:600; letter-spacing:.06em; color:var(--lbl3); text-transform:uppercase; margin-bottom:10px; padding-left:2px; }
 
 /* ── Mode Cards ── */
@@ -152,6 +178,15 @@ body { font-family:-apple-system,'SF Pro Display',system-ui,sans-serif; backgrou
 .conn-title { font-size:15px; font-weight:600; color:var(--lbl); }
 .conn-sub   { font-size:13px; color:var(--lbl2); margin-top:2px; }
 
+/* ── Setup Steps ── */
+.setup-step { display:flex; gap:14px; align-items:flex-start; background:var(--bg2); border-radius:var(--r); padding:16px; margin-bottom:10px; }
+.step-num { width:26px; height:26px; border-radius:50%; background:var(--fill2); color:var(--lbl3); font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+.step-title { font-size:15px; font-weight:600; color:var(--lbl); margin-bottom:3px; }
+.step-desc { font-size:13px; color:var(--lbl2); line-height:1.5; }
+.info-amber { background:var(--amber-bg); border-radius:var(--r-xs); padding:14px 16px; font-size:14px; color:var(--lbl2); line-height:1.55; margin-bottom:10px; }
+.info-amber strong { color:var(--text-amber); font-weight:600; }
+.info-amber code { font-family:'SF Mono',Menlo,monospace; color:var(--text-amber); font-size:12px; }
+
 /* ── Info & Log ── */
 .info-card { background:var(--blue-bg); border-radius:var(--r-xs); padding:14px 16px; font-size:14px; color:var(--lbl2); line-height:1.55; margin:12px 0; }
 .info-card strong { color:var(--blue); font-weight:600; }
@@ -165,7 +200,7 @@ body { font-family:-apple-system,'SF Pro Display',system-ui,sans-serif; backgrou
 .room-overlay { position:absolute; inset:0; pointer-events:none; z-index:0; transition:background 2.5s ease; }
 
 /* Water Panel */
-.water-panel { width:66px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; padding:clamp(10px,1.5dvh,16px) 0 clamp(8px,1dvh,12px); background:var(--bg2); border-right:1px solid var(--sep); position:relative; z-index:10; }
+.water-panel { width:66px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; padding:clamp(10px,1.5dvh,16px) 0 calc(clamp(8px,1dvh,12px) + env(safe-area-inset-bottom,0px)); background:var(--bg2); border-right:1px solid var(--sep); position:relative; z-index:10; }
 .wp-label { font-size:9px; font-weight:700; letter-spacing:.12em; color:var(--lbl3); text-align:center; margin-bottom:clamp(6px,1dvh,12px); line-height:1.5; }
 .w-track { flex:1; width:28px; background:var(--fill2); border-radius:14px; position:relative; cursor:pointer; touch-action:none; margin-bottom:clamp(6px,1dvh,10px); min-height:80px; }
 .w-fill  { position:absolute; bottom:0; left:0; right:0; border-radius:14px; transition:height .45s cubic-bezier(.34,1.56,.64,1),background .7s; }
@@ -180,10 +215,8 @@ body { font-family:-apple-system,'SF Pro Display',system-ui,sans-serif; backgrou
 
 /* Game scroll area */
 .game-main   { flex:1; display:flex; flex-direction:column; overflow:hidden; position:relative; z-index:10; }
-.game-scroll { flex:1; overflow-y:auto; padding:clamp(10px,1.5dvh,16px) 14px; -webkit-overflow-scrolling:touch; display:flex; flex-direction:column; gap:clamp(6px,1dvh,10px); }
-.game-scroll::-webkit-scrollbar { width:3px; }
-.game-scroll::-webkit-scrollbar-track { background:transparent; }
-.game-scroll::-webkit-scrollbar-thumb { background:var(--fill); border-radius:2px; }
+.game-scroll { flex:1; overflow-y:auto; scrollbar-width:none; padding:clamp(10px,1.5dvh,16px) 14px; -webkit-overflow-scrolling:touch; display:flex; flex-direction:column; gap:clamp(6px,1dvh,10px); }
+.game-scroll::-webkit-scrollbar { width:0; }
 .game-scroll .sec-lbl { margin-bottom:0; }
 
 /* Waters Rise */
@@ -213,11 +246,15 @@ body { font-family:-apple-system,'SF Pro Display',system-ui,sans-serif; backgrou
 .tr-check-ov svg { width:34px; height:34px; opacity:.6; }
 .tr-icon { font-size:clamp(20px,3.5dvh,28px); }
 .tr-name { font-size:11px; font-weight:700; letter-spacing:.02em; text-align:center; line-height:1.2; }
-.tr-gem  { font-size:11px; opacity:.65; text-align:center; }
-.t-earth { border-color:rgba(255,149,0,.45); background:var(--orange-bg); color:var(--text-orange); }
-.t-fire  { border-color:rgba(255,59,48,.45);  background:var(--red-bg);    color:var(--text-red);    }
-.t-wind  { border-color:rgba(52,199,89,.45);  background:var(--green-bg);  color:var(--text-green);  }
-.t-ocean { border-color:rgba(50,173,230,.45); background:var(--cyan-bg);   color:var(--text-cyan);   }
+.tr-gem  { font-size:11px; text-align:center; }
+.t-earth { border-color:rgba(112,85,168,.40);  background:var(--tr-earth-bg); color:var(--tr-earth-t1); }
+.t-fire  { border-color:rgba(165,55,61,.40);  background:var(--tr-fire-bg);  color:var(--tr-fire-t1);  }
+.t-wind  { border-color:rgba(188,143,59,.40); background:var(--tr-wind-bg);  color:var(--tr-wind-t1);  }
+.t-ocean { border-color:rgba(19,105,135,.40); background:var(--tr-ocean-bg); color:var(--tr-ocean-t1); }
+.t-earth .tr-gem { color:var(--tr-earth-t2); }
+.t-fire  .tr-gem { color:var(--tr-fire-t2);  }
+.t-wind  .tr-gem { color:var(--tr-wind-t2);  }
+.t-ocean .tr-gem { color:var(--tr-ocean-t2); }
 
 /* Special Cards */
 .sp-row { display:grid; grid-template-columns:1fr 1fr; gap:clamp(7px,1dvh,10px); flex:1.5 1 0; min-height:0; }
@@ -252,6 +289,33 @@ body { font-family:-apple-system,'SF Pro Display',system-ui,sans-serif; backgrou
 .sbtn-ghost { background:var(--fill);  color:var(--lbl2); }
 
 @keyframes burst { 0%{transform:scale(1)} 40%{transform:scale(1.07)} 100%{transform:scale(1)} }
+
+/* ── Game Footer ── */
+.game-footer {
+  flex-shrink:0;
+  display:flex;
+  justify-content:flex-start;
+  align-items:center;
+  gap:20px;
+  padding:clamp(8px,1.2dvh,14px) 14px calc(env(safe-area-inset-bottom,0px) + 10px) calc(66px + 14px);
+  border-top:1px solid var(--sep);
+  background:var(--bg);
+}
+.footer-credits {
+  display:flex; align-items:center; gap:5px;
+  background:none; border:none; cursor:pointer; padding:0;
+  color:var(--lbl3); font-size:11px; font-weight:500; font-family:inherit;
+  -webkit-user-select:none; user-select:none; justify-content:flex-start;
+}
+.footer-credits:active { opacity:.5; }
+.footer-credits svg { width:15px; height:15px; flex-shrink:0; }
+.footer-bmc {
+  display:flex; align-items:center; justify-content:flex-end; gap:5px;
+  color:var(--lbl3); font-size:11px; font-weight:500;
+  text-decoration:none; -webkit-user-select:none; user-select:none;
+}
+.footer-bmc:active { opacity:.5; }
+.footer-bmc svg { width:14px; height:14px; flex-shrink:0; }
 </style>
 </head>
 <body>
@@ -266,8 +330,8 @@ body { font-family:-apple-system,'SF Pro Display',system-ui,sans-serif; backgrou
     <div style="width:clamp(64px,10vh,88px);height:clamp(64px,10vh,88px);background:linear-gradient(145deg,#0A84FF,#0056CC);border-radius:clamp(18px,2.5vh,24px);display:flex;align-items:center;justify-content:center;margin:0 auto clamp(14px,2.5vh,22px);box-shadow:0 12px 40px rgba(0,122,255,.32)">
       <svg viewBox="0 0 24 24" fill="white" style="width:clamp(32px,6vh,46px);height:clamp(32px,6vh,46px)"><path d="M12 3.5l-6 7.8C5.1 13 5 13.7 5 14.5a7 7 0 0014 0c0-1.23-.57-2.37-1.5-3.5L12 3.5z"/></svg>
     </div>
-    <div class="large-title">Forbidden<br>Island</div>
-    <div style="font-size:clamp(14px,2vh,17px);color:var(--lbl2);margin-top:clamp(6px,1vh,10px)">Sound &amp; Atmosphere Assistant</div>
+    <div class="large-title cinzel">Rising<br>Hue</div>
+    <div style="font-size:clamp(14px,2vh,17px);color:var(--lbl2);margin-top:clamp(6px,1vh,10px)">Rising Hue Atmosphere</div>
   </div>
 
   <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--lbl3);text-align:center;margin-bottom:clamp(10px,2vh,18px);text-transform:uppercase">Choose your mode</div>
@@ -313,44 +377,71 @@ body { font-family:-apple-system,'SF Pro Display',system-ui,sans-serif; backgrou
       Back
     </button>
     <div class="ios-nav-title" style="text-align:center">Hue Setup</div>
-    <div style="width:52px"></div><!-- spacer -->
+    <div style="width:52px;display:flex;align-items:center;justify-content:flex-end">
+      <svg viewBox="0 0 24 24" fill="var(--blue)" width="20" height="20"><path d="M12 3.5l-6 7.8C5.1 13 5 13.7 5 14.5a7 7 0 0014 0c0-1.23-.57-2.37-1.5-3.5L12 3.5z"/></svg>
+    </div>
   </div>
 
   <div class="screen-body">
-    <div class="conn-bar">
+
+    <!-- Status -->
+    <div class="conn-bar" style="margin-bottom:20px">
       <div class="conn-dot" id="hueDot"></div>
       <div>
-        <div class="conn-title" id="hueLbl">Ready to connect</div>
-        <div class="conn-sub"  id="hueSub">Searching for Bridge…</div>
+        <div class="conn-title" id="hueLbl">Searching for Bridge…</div>
+        <div class="conn-sub"  id="hueSub">Scanning your network</div>
       </div>
     </div>
 
-    <div style="background:var(--bg2);border-radius:var(--r);padding:20px;margin-bottom:14px">
-      <div class="fi-group" style="margin-bottom:0">
-        <label class="fi-label">Bridge IP Address</label>
-        <input class="fi-input" id="bIp" type="text" placeholder="Searching…" inputmode="url" autocomplete="off">
+    <div class="sec-lbl">How to connect</div>
+
+    <!-- Step 1 -->
+    <div class="setup-step">
+      <div class="step-num">1</div>
+      <div style="flex:1">
+        <div class="step-title">Bridge IP Address</div>
+        <div class="step-desc">Found automatically when possible. Edit below if needed.</div>
+        <input class="fi-input" id="bIp" type="text" placeholder="Searching…" inputmode="url" autocomplete="off" style="margin-top:12px">
       </div>
     </div>
 
-    <div class="info-card" style="margin-bottom:14px">
-      <strong>Step 1:</strong> Press the round button on top of your Hue Bridge.<br>
-      <strong>Step 2:</strong> Tap Connect below within 30 seconds.
+    <!-- IP not found help -->
+    <div class="info-amber" id="ipHelpCard" style="display:none">
+      <strong>Couldn't find your Bridge automatically.</strong><br><br>
+      <strong>Philips Hue app:</strong> Open the official Hue app → Settings → My Hue system → tap <strong>ⓘ</strong> next to your Bridge → copy the IP.<br><br>
+      <strong>Router:</strong> Open your router admin (usually <code>192.168.1.1</code>) → find <strong>"Philips Hue"</strong> in connected devices.
     </div>
 
-    <div class="info-card" id="certCard" style="display:none;border-left:3px solid #FF9500">
-      <strong>iPhone — one-time setup (30 seconds):</strong><br><br>
+    <!-- Step 2 -->
+    <div class="setup-step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Press the Bridge button</div>
+        <div class="step-desc">Press the round button on top of your Hue Bridge.</div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="setup-step" style="margin-bottom:16px">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Tap Connect</div>
+        <div class="step-desc">Do this within 30 seconds of pressing the button.</div>
+      </div>
+    </div>
+
+    <!-- iPhone cert help -->
+    <div class="info-amber" id="certCard" style="display:none">
+      <strong>iPhone — one-time setup:</strong><br><br>
       1. Tap <strong>Open Bridge in Browser</strong> below<br>
       2. Safari shows <em>"This connection is not private"</em><br>
-      3. Scroll to the <strong>bottom</strong> of that page<br>
-      4. Tap <strong>Show Details</strong><br>
-      5. Tap <strong>visit this website</strong><br>
-      6. Tap <strong>Visit Website</strong> to confirm<br>
-      7. Return here and tap <strong>Connect</strong> again
+      3. Scroll to bottom → <strong>Show Details</strong> → <strong>visit this website</strong><br>
+      4. Return here and tap <strong>Connect</strong> again
       <button class="ios-btn btn-secondary" style="margin-top:12px" onclick="trustCert()">Open Bridge in Browser</button>
     </div>
 
     <button class="ios-btn btn-primary" id="btnConnect" onclick="connectHue()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       Connect
     </button>
     <button class="ios-btn btn-green" id="btnPlay" style="display:none" onclick="startGame()">
@@ -358,7 +449,7 @@ body { font-family:-apple-system,'SF Pro Display',system-ui,sans-serif; backgrou
       Start Game
     </button>
 
-    <div class="log-box" id="hLog"><div class="log-n">Connection log appears here…</div></div>
+    <div id="hLog" style="display:none"></div>
   </div>
 </div>
 
@@ -372,9 +463,12 @@ body { font-family:-apple-system,'SF Pro Display',system-ui,sans-serif; backgrou
   <div class="ios-nav">
     <div style="display:flex;align-items:center;gap:8px;flex:1">
       <svg viewBox="0 0 24 24" fill="var(--blue)" width="18" height="18"><path d="M12 3.5l-6 7.8C5.1 13 5 13.7 5 14.5a7 7 0 0014 0c0-1.23-.57-2.37-1.5-3.5L12 3.5z"/></svg>
-      <span style="font-size:15px;font-weight:700;color:var(--blue);letter-spacing:.04em">FORBIDDEN ISLAND</span>
+      <span style="font-size:15px;font-weight:700;color:var(--lbl);font-family:'Cinzel Decorative',serif">Rising Hue</span>
     </div>
     <div style="display:flex;gap:8px">
+      <button class="ico-btn" onclick="openCredits()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </button>
       <button class="ico-btn active" id="mBtn" onclick="toggleMusic()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
       </button>
@@ -500,8 +594,26 @@ body { font-family:-apple-system,'SF Pro Display',system-ui,sans-serif; backgrou
         </div>
         <div style="height:28px"></div>
       </div>
-    </div>
+
+    </div><!-- game-main -->
   </div><!-- game-body -->
+
+  <!-- Credits Sheet -->
+  <div class="sheet-bg" id="m-credits" onclick="if(event.target===this)closeSheet('m-credits')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div style="font-size:22px;font-weight:700;color:var(--lbl);margin-bottom:20px">Credits</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--lbl3);text-transform:uppercase;margin-bottom:12px">Designed by</div>
+      <div style="font-size:16px;color:var(--lbl);margin-bottom:8px">Melike Mühür</div>
+      <div style="font-size:16px;color:var(--lbl);margin-bottom:20px">Aykut Yıldırım</div>
+      <div style="font-size:12px;color:var(--lbl3);letter-spacing:.06em;margin-bottom:28px">Toehn Creative — 2026</div>
+      <a class="sheet-btn sbtn-amber" href="https://www.patreon.com/posts/rising-hue-pack-160326739?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        Buy me a coffee
+      </a>
+      <button class="sheet-btn sbtn-ghost" onclick="closeSheet('m-credits')">Close</button>
+    </div>
+  </div>
 
   <!-- Settings Sheet -->
   <div class="sheet-bg" id="m-settings" onclick="if(event.target===this)closeSheet('m-settings')">
@@ -552,8 +664,9 @@ const ST = {
   mode:'sound', hue:{ip:'',user:'',conn:false},
   lvl:1, tiles:0, musicOn:true,
   claimed:{earth:false,fire:false,wind:false,ocean:false},
-  actx:null, musicGain:null, loops:{}, dark:false
+  actx:null, musicGain:null, musicNode:null, dark:false
 };
+const AUDIO = {};
 const LNAMES = ['','Calm','Calm','Rising','Rising','Flooding','Flooding','Flooding','Submerging','Engulfed','Lost'];
 const DRAMA  = [
   {min:0, max:3,  lbl:'Calm',     desc:'Island shrinking',       c:'var(--lbl2)'},
@@ -563,8 +676,7 @@ const DRAMA  = [
 ];
 const WR_RGB = [[219,234,254],[191,219,254],[147,197,253],[96,165,250],[59,130,246],[37,99,235],[29,78,216],[30,64,175],[30,58,138],[23,37,84]];
 const WR_HEX = ['','#dbeafe','#bfdbfe','#93c5fd','#60a5fa','#3b82f6','#2563eb','#1d4ed8','#1e40af','#1e3a8a','#172554'];
-const TR_RGB = {earth:[255,149,0],fire:[255,59,48],wind:[52,199,89],ocean:[50,173,230]};
-const TR_NOTES={earth:[220,277,330,415],fire:[262,330,392,523],wind:[196,247,294,392],ocean:[233,293,349,440]};
+const TR_RGB = {earth:[112,85,168],fire:[165,55,61],wind:[188,143,59],ocean:[19,105,135]};
 
 /* ════ SCREEN NAV ════ */
 function goScreen(id){
@@ -578,6 +690,35 @@ function getCtx(){
   if(ST.actx.state==='suspended') ST.actx.resume();
   return ST.actx;
 }
+async function loadSounds(){
+  const files={
+    ambiance:'sounds/ambiance.mp3',
+    'game-over':'sounds/game-over.mp3',
+    helicopter:'sounds/helicopter.mp3',
+    sandbag:'sounds/sandbag.mp3',
+    tilesank:'sounds/tilesank.mp3',
+    treasure:'sounds/treasure.mp3',
+    victory:'sounds/victory.mp3',
+    'water-rise-low':'sounds/water-rise-low.mp3',
+    'water-rise-high':'sounds/water-rise-high.mp3',
+  };
+  const c=getCtx();
+  await Promise.all(Object.entries(files).map(async([k,url])=>{
+    try{const r=await fetch(url);const ab=await r.arrayBuffer();AUDIO[k]=await c.decodeAudioData(ab);}
+    catch(e){console.warn('Audio load failed:',k,e);}
+  }));
+}
+function playBuf(key,vol=1,loop=false){
+  if(!AUDIO[key]) return null;
+  const c=getCtx(),s=c.createBufferSource(),g=c.createGain();
+  s.buffer=AUDIO[key];s.loop=loop;g.gain.value=vol;
+  s.connect(g);g.connect(c.destination);s.start();
+  if(key!=='ambiance'&&ST.musicGain){
+    ST.musicGain.gain.setTargetAtTime(0,c.currentTime,.03);
+    s.onended=()=>{if(ST.musicGain&&ST.musicOn) ST.musicGain.gain.setTargetAtTime(.035,c.currentTime,.3);};
+  }
+  return{source:s,gain:g};
+}
 function snd_tap(){
   const c=getCtx(),o=c.createOscillator(),e=c.createGain();
   o.type='sine';o.frequency.value=1080;
@@ -585,110 +726,26 @@ function snd_tap(){
   o.connect(e);e.connect(c.destination);o.start();o.stop(c.currentTime+.09);
 }
 function startMusic(){
-  if(ST.musicGain) return;
-  const c=getCtx(),mg=c.createGain();mg.gain.value=.16;mg.connect(c.destination);ST.musicGain=mg;
-  [55,82.5,110].forEach((f,i)=>{
-    const o=c.createOscillator(),g=c.createGain(),flt=c.createBiquadFilter();
-    o.type='sine';o.frequency.value=f;flt.type='lowpass';flt.frequency.value=380;g.gain.value=.28/(i+1);
-    o.connect(flt);flt.connect(g);g.connect(mg);o.start();ST.loops['d'+i]=o;
-  });
-  (function shimmer(){
-    if(!ST.musicGain) return;
-    const c=getCtx(),o=c.createOscillator(),e=c.createGain(),p=c.createStereoPanner();
-    o.type='sine';o.frequency.value=220+Math.random()*330;p.pan.value=(Math.random()-.5)*1.4;
-    e.gain.setValueAtTime(0,c.currentTime);e.gain.linearRampToValueAtTime(.04,c.currentTime+1.4);
-    e.gain.linearRampToValueAtTime(0,c.currentTime+4);
-    o.connect(e);e.connect(p);p.connect(mg);o.start();o.stop(c.currentTime+4.2);
-    setTimeout(shimmer,1400+Math.random()*2400);
-  })();
+  if(ST.musicNode) return;
+  const node=playBuf('ambiance',.035,true);
+  if(node){ST.musicNode=node.source;ST.musicGain=node.gain;}
 }
 function stopMusic(){
-  if(!ST.musicGain) return;
+  if(!ST.musicNode) return;
   try{ST.musicGain.gain.setTargetAtTime(0,getCtx().currentTime,.5);}catch(e){}
-  setTimeout(()=>{['d0','d1','d2'].forEach(k=>{try{ST.loops[k].stop();}catch(e){}});ST.musicGain=null;},900);
+  setTimeout(()=>{try{ST.musicNode.stop();}catch(e){}ST.musicNode=null;ST.musicGain=null;},900);
 }
 function setMusicTension(lvl){
   if(!ST.musicGain||!ST.musicOn) return;
-  ST.musicGain.gain.setTargetAtTime(.1+(lvl/10)*.22,getCtx().currentTime,1.5);
+  ST.musicGain.gain.setTargetAtTime(.15+(lvl/10)*.3,getCtx().currentTime,1.5);
 }
-function snd_watersrise(lvl){
-  const c=getCtx(),g=c.createGain();g.gain.value=.6;g.connect(c.destination);
-  const b=c.createBuffer(1,c.sampleRate*.4,c.sampleRate),d=b.getChannelData(0);
-  for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(c.sampleRate*.1));
-  const s=c.createBufferSource(),f=c.createBiquadFilter();f.type='lowpass';f.frequency.value=180+lvl*25;
-  s.buffer=b;s.connect(f);f.connect(g);s.start();
-  const o=c.createOscillator(),en=c.createGain();
-  o.type='sine';o.frequency.setValueAtTime(55,c.currentTime);o.frequency.linearRampToValueAtTime(110+lvl*12,c.currentTime+.9);
-  en.gain.setValueAtTime(.45,c.currentTime);en.gain.exponentialRampToValueAtTime(.001,c.currentTime+.95);
-  o.connect(en);en.connect(c.destination);o.start();o.stop(c.currentTime+.95);
-}
-function snd_tilesank(stage){
-  const c=getCtx(),vol=.45+stage*.15,rt=.25+stage*.4;
-  const b=c.createBuffer(1,c.sampleRate*.12,c.sampleRate),d=b.getChannelData(0);
-  for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(c.sampleRate*.028));
-  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();
-  f.type='lowpass';f.frequency.value=130+stage*70;g.gain.value=vol;
-  s.buffer=b;s.connect(f);f.connect(g);g.connect(c.destination);s.start();
-  const sb=c.createBuffer(1,c.sampleRate*rt,c.sampleRate),sd=sb.getChannelData(0);
-  for(let i=0;i<sd.length;i++) sd[i]=(Math.random()*2-1)*Math.exp(-i/(c.sampleRate*rt*.4));
-  const ss=c.createBufferSource(),sf=c.createBiquadFilter(),sg=c.createGain();
-  sf.type='bandpass';sf.frequency.value=600+stage*180;sf.Q.value=.8;sg.gain.value=.32+stage*.08;
-  ss.buffer=sb;ss.connect(sf);sf.connect(sg);sg.connect(c.destination);ss.start(c.currentTime+.07);
-  if(stage>=2){
-    const ro=c.createOscillator(),rg=c.createGain(),rf=c.createBiquadFilter();
-    ro.type='sawtooth';ro.frequency.value=38+stage*8;rf.type='lowpass';rf.frequency.value=110;
-    rg.gain.setValueAtTime(.28,c.currentTime);rg.gain.exponentialRampToValueAtTime(.001,c.currentTime+1.6+stage*.4);
-    ro.connect(rf);rf.connect(rg);rg.connect(c.destination);ro.start();ro.stop(c.currentTime+1.8+stage*.5);
-  }
-}
-function snd_treasure(id){
-  const c=getCtx(),mg=c.createGain();mg.gain.value=.35;mg.connect(c.destination);
-  TR_NOTES[id].forEach((f,i)=>{
-    const o=c.createOscillator(),e=c.createGain();o.type='triangle';o.frequency.value=f;
-    const t=c.currentTime+i*.13;
-    e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(.7,t+.04);e.gain.exponentialRampToValueAtTime(.001,t+1.4);
-    o.connect(e);e.connect(mg);o.start(t);o.stop(t+1.5);
-  });
-  setTimeout(()=>{const c2=getCtx();TR_NOTES[id].forEach(f=>{
-    const o=c2.createOscillator(),e=c2.createGain();o.type='sine';o.frequency.value=f*2;
-    e.gain.setValueAtTime(.1,c2.currentTime);e.gain.exponentialRampToValueAtTime(.001,c2.currentTime+2);
-    o.connect(e);e.connect(mg);o.start();o.stop(c2.currentTime+2);
-  });},600);
-}
-function snd_heli(){
-  const c=getCtx(),mg=c.createGain();mg.gain.value=.48;mg.connect(c.destination);let n=0;
-  (function beat(){
-    if(n>12) return;n++;
-    const o=c.createOscillator(),e=c.createGain();o.type='sawtooth';o.frequency.value=62+Math.random()*8;
-    e.gain.setValueAtTime(.7,c.currentTime);e.gain.exponentialRampToValueAtTime(.001,c.currentTime+.14);
-    o.connect(e);e.connect(mg);o.start();o.stop(c.currentTime+.15);setTimeout(beat,275+Math.random()*28);
-  })();
-}
-function snd_sandbag(){
-  const c=getCtx(),b=c.createBuffer(1,c.sampleRate*.14,c.sampleRate),d=b.getChannelData(0);
-  for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(c.sampleRate*.055));
-  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();
-  f.type='lowpass';f.frequency.value=280;g.gain.value=.48;
-  s.buffer=b;s.connect(f);f.connect(g);g.connect(c.destination);s.start();
-}
-function snd_gameover(){
-  const c=getCtx(),mg=c.createGain();mg.gain.value=.48;mg.connect(c.destination);
-  [440,370,311,233,185].forEach((f,i)=>{
-    const o=c.createOscillator(),e=c.createGain();o.type='sine';o.frequency.value=f;
-    const t=c.currentTime+i*.38;
-    e.gain.setValueAtTime(.5,t);e.gain.exponentialRampToValueAtTime(.001,t+1.1);
-    o.connect(e);e.connect(mg);o.start(t);o.stop(t+1.2);
-  });
-}
-function snd_victory(){
-  const c=getCtx(),mg=c.createGain();mg.gain.value=.38;mg.connect(c.destination);
-  [523,659,784,659,784,1047].forEach((f,i)=>{
-    const o=c.createOscillator(),e=c.createGain();o.type='triangle';o.frequency.value=f;
-    const t=c.currentTime+i*.15;
-    e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(.6,t+.04);e.gain.exponentialRampToValueAtTime(.001,t+.55);
-    o.connect(e);e.connect(mg);o.start(t);o.stop(t+.6);
-  });
-}
+function snd_watersrise(lvl){ const n=playBuf(lvl<=4?'water-rise-low':'water-rise-high',.7); if(n) try{n.source.stop(getCtx().currentTime+4);}catch(e){} }
+function snd_tilesank(stage){ playBuf('tilesank',.45+stage*.1); }
+function snd_treasure(){ playBuf('treasure',.65); }
+function snd_heli(){ playBuf('helicopter',.65); }
+function snd_sandbag(){ playBuf('sandbag',.65); }
+function snd_gameover(){ playBuf('game-over',.75); }
+function snd_victory(){ playBuf('victory',.75); }
 
 /* ════ HUE ════ */
 function isIosSafari(){return/iP(hone|od|ad)/.test(navigator.userAgent)&&/WebKit/.test(navigator.userAgent)&&!/CriOS|FxiOS|OPiOS/.test(navigator.userAgent);}
@@ -720,7 +777,8 @@ async function hWaterLvl(lvl){const xy=rgbXy(...WR_RGB[lvl-1]),bri=Math.round(75
 async function hWatersRise(lvl){
   const xy=rgbXy(...WR_RGB[lvl-1]);
   for(let i=0;i<2;i++){await hGroup({on:true,bri:254,xy,transitiontime:1});await sl(320);await hGroup({on:true,bri:40,xy,transitiontime:1});await sl(320);}
-  await hWaterLvl(lvl);
+  const bri=Math.round(75+(lvl/10)*125);
+  await hGroup({on:true,bri,xy,transitiontime:30});
 }
 async function hTileSank(stage){
   if(stage===0){await hGroup({on:true,bri:55,transitiontime:2});await sl(550);await hWaterLvl(ST.lvl);}
@@ -728,7 +786,17 @@ async function hTileSank(stage){
   else{const bk=stage===2?2:3;for(let i=0;i<bk;i++){await hGroup({on:false,transitiontime:0});await sl(240);await hGroup({on:true,bri:75,transitiontime:0});await sl(240);}await hWaterLvl(ST.lvl);}
 }
 async function hTreasure(id){const xy=rgbXy(...TR_RGB[id]);await hGroup({on:true,bri:254,xy,transitiontime:5});await sl(2200);await hWaterLvl(ST.lvl);}
-async function hHeli(){const xy=rgbXy(251,191,36);for(let i=0;i<6;i++){await hGroup({on:i%2===0,bri:200,xy,transitiontime:0});await sl(200);}await hWaterLvl(ST.lvl);}
+async function hHeli(){
+  const xy=rgbXy(200,215,255); // soğuk beyaz — xenon spotlight
+  const beats=[100,70,120,80,95,65,130,75,105,70]; // düzensiz pervane ritmi — sık
+  for(let i=0;i<beats.length;i++){
+    await hGroup({on:true,bri:i%2===0?220:8,xy,transitiontime:0});
+    await sl(beats[i]);
+  }
+  await hGroup({on:true,bri:180,xy,transitiontime:5}); // kısa tutunma
+  await sl(600);
+  await hWaterLvl(ST.lvl);
+}
 async function hGameOver(){await hGroup({on:true,bri:18,xy:rgbXy(127,29,29),transitiontime:35});await sl(3500);await hGroup({on:true,bri:32,transitiontime:10});}
 async function hVictory(){for(const c of[[251,191,36],[34,197,94],[6,182,212],[239,68,68]]){await hGroup({on:true,bri:254,xy:rgbXy(...c),transitiontime:3});await sl(500);}await hGroup({on:true,bri:200,transitiontime:12,ct:230});}
 
@@ -811,12 +879,13 @@ function toggleTheme(){
 async function connectHue(){
   snd_tap();
   document.getElementById('certCard').style.display='none';
+  document.getElementById('ipHelpCard').style.display='none';
   let ip=document.getElementById('bIp').value.trim();
   if(!ip){
     setDot('busy','Searching…','Looking for Bridge');
     hlog('No IP entered — trying auto-discover…','log-info');
     ip=await autoDiscover();
-    if(!ip){setDot('error','Not found','Enter IP manually');hlog('Bridge not found automatically. Enter the IP address above.','log-err');return;}
+    if(!ip){setDot('error','Not found','See instructions below');hlog('Bridge not found automatically.','log-err');document.getElementById('ipHelpCard').style.display='block';return;}
     document.getElementById('bIp').value=ip;
     hlog('Found Bridge at '+ip,'log-ok');
   }
@@ -894,13 +963,14 @@ async function chooseHue(){
     setDot('busy','Searching…','Looking for Bridge');
     const ip=await autoDiscover();
     if(ip){document.getElementById('bIp').value=ip;hlog('Found Bridge at '+ip,'log-ok');setDot('','Ready','Press Bridge button → Connect');}
-    else{hlog('Bridge not found automatically. Enter IP above.','log-err');setDot('','Ready','Enter IP above');}
+    else{hlog('Bridge not found automatically.','log-err');setDot('error','Not found','See instructions below');document.getElementById('ipHelpCard').style.display='block';}
   }
 }
 function chooseSoundOnly(){snd_tap();ST.mode='sound';ST.hue.conn=false;startGame();}
-function startGame(){
+async function startGame(){
   goScreen('s-game');
   requestAnimationFrame(()=>requestAnimationFrame(()=>setLevel(1,false)));
+  await loadSounds();
   if(ST.musicOn) startMusic();
 }
 
@@ -943,6 +1013,9 @@ function resetGame(){
   if(td) td.textContent='Island shrinking';
   setLevel(1,false);if(ST.hue.conn) hWaterLvl(1);
 }
+
+/* ════ CREDITS ════ */
+function openCredits(){ snd_tap(); openSheet('m-credits'); }
 
 /* ════ HELPERS ════ */
 function openSheet(id){document.getElementById(id)?.classList.add('open');}
